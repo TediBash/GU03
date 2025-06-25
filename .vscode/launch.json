@@ -1,0 +1,57 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "basecall_original.py",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": [
+                "--model","bonitosnn",
+                "--chunk-size","4",
+                //"--fast5-list","./sbonito/inter_task_test_reads.txt",
+                "--fast5-dir","/root/Acinetobacter_baumannii_AYP-A2/all_fast5",
+                "--checkpoint","../bonitosnn_trained/checkpoint_43546.pt",
+                "--output-file","./sbonito/inter_test_basecalls.fastq"
+            ]
+        },
+        {
+            "name": "train_original.py",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": [
+                "--data-dir", "/root/Acinetobacter_baumannii_AYP-A2/train_numpy_resquiggled",
+                "--output-dir", "./sbonito/test_spikelin_5",
+                "--model", "bonitospikelin",
+                "--window-size", "2000",
+                "--batch-size", "4",
+                "--nlstm","0",
+                "--conv-th", "0.001",
+                //"--starting-lr","0.00002",
+                //"--warmup-steps","0",
+                //"--overwrite"
+            ] //"--starting-lr","0.00002",
+            //"--checkpoint","./trained/bonito_trained/inter_2000/checkpoint.pt"]  //"--use-scaler"
+        },
+        {
+            "name": "plot_train_log.py",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": [
+                "--log-file","../logs/trained_model3.log",
+                "--output-img","../logs/trained_model3.svg",
+            ]
+        }
+    ]
+}
