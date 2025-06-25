@@ -168,11 +168,8 @@ if __name__ == '__main__':
               device = device,
               dataloader_train = dataloader_train, 
               dataloader_validation = dataloader_validation,
-              scaler = None,
-              use_amp = False,
-              nlstm=0,
-              l2mu = l2mu_dict,
-              nconv = args.one_conv
+              scaler = scaler,
+              use_amp = use_amp
           )
     
     '''model = Model(
