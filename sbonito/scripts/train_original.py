@@ -101,7 +101,7 @@ if __name__ == '__main__':
     parser.add_argument("--one-conv", type= bool, default= False,help = "set to true for a 1 convolution model")
     args = parser.parse_args()
     
-    validate_every = 100
+    validate_every = 10
     checkpoint_every = 20000
 
     data_dir = args.data_dir
@@ -257,6 +257,8 @@ if __name__ == '__main__':
                 # calculate accuracy for the training only here since doing for every batch
                 # is expensive and slow...
                 predictions_decoded = model.decode(predictions, greedy = True)
+                check_list = np.array(predictions_decoded)
+                print(check_list.shape)
                 metrics = model.evaluate(train_batch, predictions_decoded)
                 
                 # log the train results
