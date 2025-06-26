@@ -74,7 +74,7 @@ class BaseModel(nn.Module):
         
         with torch.cuda.amp.autocast(enabled=self.use_amp):
             p = self.forward(x) # forward through the network
-            print('********** Shape output forward ',p.shape," *************")
+            #print('********** Shape output forward ',p.shape," *************")
 
             loss, losses = self.calculate_loss(y, p)
 
