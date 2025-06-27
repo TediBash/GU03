@@ -159,13 +159,14 @@ class S5Model(BaseModelImpl):
     def build_cnn(self):
         version = self.cnn_version
         if version == 0:
-            self.build_cnn_version_0()
+            cnn = self.build_cnn_version_0()
         elif version == 1:
-            self.build_cnn_version_1()
+            cnn = self.build_cnn_version_1()
             self.in_dim = 512
         else:
-            self.build_cnn_version_2()
+            cnn = self.build_cnn_version_2()
             self.in_dim = 128
+        return cnn
     
     def build_cnn_version_0(self):
 
