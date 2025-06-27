@@ -122,7 +122,7 @@ class S5Model(BaseModelImpl):
     """S5 Model
     """
     def __init__(self, convolution = None, encoder = None, decoder = None, reverse = True, load_default = False,
-                 nlstm=0,slstm_threshold=0.05, conv_threshold=0, *args, **kwargs):
+                 nlstm=0, cnn_version=0, *args, **kwargs):
         super(S5Model, self).__init__(*args, **kwargs)
         """
         Args:
@@ -137,6 +137,8 @@ class S5Model(BaseModelImpl):
         self.decoder = decoder
         self.reverse = reverse
         self.nblock = nlstm
+        self.cnn_version = cnn_version
+        self.in_dim = 400
         
         if load_default:
             self.load_default_configuration()
@@ -154,6 +156,17 @@ class S5Model(BaseModelImpl):
         x = self.decoder(x)
         return x
 
+    def build_cnn(self):
+        version = self.cnn_version
+        if version == 0:
+            self.build_cnn_version_0()
+        elif version == 1:
+            self.build_cnn_version_1()
+            self.in_dim = 512
+        else:
+            self.build_cnn_version_2()
+            self.in_dim = 128
+    
     def build_cnn_version_0(self):
 
         cnn = nn.Sequential(
@@ -370,122 +383,6 @@ class S5Model(BaseModelImpl):
             nn.AdaptiveAvgPool1d(400)   # [batch, 128, 400]
         )
         return cnn
-    
-    def build_cnn(self):
-        cnn = nn.Sequential(
-            # Stem: Initial signal processing
-            nn.Conv1d(1, 24, kernel_size=7, stride=1, padding=3, bias=False),
-            nn.GroupNorm(4, 24),
-            nn.SiLU(),
-            nn.Dropout1d(0.1),
-            
-            # Stage 1: Individual base signal detection - Block 1
-            nn.Conv1d(24, 72, kernel_size=1, bias=False),  # Expand (24 * 3)
-            nn.GroupNorm(8, 72),
-            nn.SiLU(),
-            nn.Conv1d(72, 72, kernel_size=5, stride=1, padding=2, groups=72, bias=False),  # Depthwise
-            nn.GroupNorm(8, 72),
-            nn.SiLU(),
-            nn.Conv1d(72, 32, kernel_size=1, bias=False),  # Compress
-            nn.GroupNorm(4, 32),
-            nn.Dropout1d(0.05),
-            
-            # Stage 1: Individual base signal detection - Block 2 (with residual-like structure)
-            nn.Conv1d(32, 64, kernel_size=1, bias=False),  # Expand (32 * 2)
-            nn.GroupNorm(8, 64),
-            nn.SiLU(),
-            nn.Conv1d(64, 64, kernel_size=5, stride=1, padding=2, groups=64, bias=False),  # Depthwise
-            nn.GroupNorm(8, 64),
-            nn.SiLU(),
-            nn.Conv1d(64, 32, kernel_size=1, bias=False),  # Compress (same output as input for residual)
-            nn.GroupNorm(4, 32),
-            nn.Dropout1d(0.05),
-            nn.SiLU(),
-            
-            # Stage 2: Base transition detection - Block 1
-            nn.Conv1d(32, 96, kernel_size=1, bias=False),  # Expand (32 * 3)
-            nn.GroupNorm(8, 96),
-            nn.SiLU(),
-            nn.Conv1d(96, 96, kernel_size=7, stride=1, padding=6, dilation=2, groups=96, bias=False),  # Depthwise
-            nn.GroupNorm(8, 96),
-            nn.SiLU(),
-            nn.Conv1d(96, 48, kernel_size=1, bias=False),  # Compress
-            nn.GroupNorm(6, 48),
-            nn.Dropout1d(0.05),
-            
-            # Stage 2: Base transition detection - Block 2
-            nn.Conv1d(48, 96, kernel_size=1, bias=False),  # Expand (48 * 2)
-            nn.GroupNorm(8, 96),
-            nn.SiLU(),
-            nn.Conv1d(96, 96, kernel_size=5, stride=1, padding=4, dilation=2, groups=96, bias=False),  # Depthwise
-            nn.GroupNorm(8, 96),
-            nn.SiLU(),
-            nn.Conv1d(96, 48, kernel_size=1, bias=False),  # Compress
-            nn.GroupNorm(6, 48),
-            nn.Dropout1d(0.05),
-            nn.SiLU(),
-            
-            # Stage 3: K-mer context modeling - Block 1 (with downsampling)
-            nn.Conv1d(48, 192, kernel_size=1, bias=False),  # Expand (48 * 4)
-            nn.GroupNorm(8, 192),
-            nn.SiLU(),
-            nn.Conv1d(192, 192, kernel_size=5, stride=2, padding=8, dilation=4, groups=192, bias=False),  # Depthwise + downsample
-            nn.GroupNorm(8, 192),
-            nn.SiLU(),
-            nn.Conv1d(192, 64, kernel_size=1, bias=False),  # Compress
-            nn.GroupNorm(8, 64),
-            nn.Dropout1d(0.05),
-            
-            # Stage 3: K-mer context modeling - Block 2
-            nn.Conv1d(64, 128, kernel_size=1, bias=False),  # Expand (64 * 2)
-            nn.GroupNorm(8, 128),
-            nn.SiLU(),
-            nn.Conv1d(128, 128, kernel_size=5, stride=1, padding=4, dilation=2, groups=128, bias=False),  # Depthwise
-            nn.GroupNorm(8, 128),
-            nn.SiLU(),
-            nn.Conv1d(128, 64, kernel_size=1, bias=False),  # Compress
-            nn.GroupNorm(8, 64),
-            nn.Dropout1d(0.05),
-            nn.SiLU(),
-            
-            # Stage 4: Homopolymer run detection - Block 1 (with downsampling)
-            nn.Conv1d(64, 256, kernel_size=1, bias=False),  # Expand (64 * 4)
-            nn.GroupNorm(8, 256),
-            nn.SiLU(),
-            nn.Conv1d(256, 256, kernel_size=7, stride=2, padding=12, dilation=4, groups=256, bias=False),  # Depthwise + downsample
-            nn.GroupNorm(8, 256),
-            nn.SiLU(),
-            nn.Conv1d(256, 128, kernel_size=1, bias=False),  # Compress to 128
-            nn.GroupNorm(8, 128),
-            nn.Dropout1d(0.05),
-            
-            # Stage 4: Homopolymer run detection - Block 2
-            nn.Conv1d(128, 256, kernel_size=1, bias=False),  # Expand (128 * 2)
-            nn.GroupNorm(8, 256),
-            nn.SiLU(),
-            nn.Conv1d(256, 256, kernel_size=5, stride=1, padding=4, dilation=2, groups=256, bias=False),  # Depthwise
-            nn.GroupNorm(8, 256),
-            nn.SiLU(),
-            nn.Conv1d(256, 128, kernel_size=1, bias=False),  # Compress
-            nn.GroupNorm(8, 128),
-            nn.Dropout1d(0.05),
-            nn.SiLU(),
-            
-            # Stage 5: Final integration - increase to 256 channels
-            nn.Conv1d(128, 384, kernel_size=1, bias=False),  # Expand (128 * 3)
-            nn.GroupNorm(8, 384),
-            nn.SiLU(),
-            nn.Conv1d(384, 384, kernel_size=5, stride=1, padding=2, groups=384, bias=False),  # Depthwise
-            nn.GroupNorm(8, 384),
-            nn.SiLU(),
-            nn.Conv1d(384, 256, kernel_size=1, bias=False),  # Compress to 256 channels (CHANGED)
-            nn.GroupNorm(8, 256),
-            nn.SiLU(),
-            
-            # Final adaptive pooling to exact output length
-            nn.AdaptiveAvgPool1d(400)
-        )
-        return cnn
 
     def build_encoder(self, input_size, reverse):
         
@@ -494,7 +391,7 @@ class S5Model(BaseModelImpl):
             state_dim=96,   # even with 246 dim no big changes
             bidir=reverse,
             block_count=self.nblock,
-            ff_dropout=0.0,
+            ff_dropout=0.05,
         )
         return encoder    
 
@@ -515,7 +412,7 @@ class S5Model(BaseModelImpl):
 
         self.convolution = self.build_cnn()
         self.cnn_stride = self.get_defaults()['cnn_stride']
-        self.encoder = self.build_encoder(input_size = 128, reverse = True)
-        self.decoder = self.build_decoder(encoder_output_size = 128, decoder_type = 'crf')
+        self.encoder = self.build_encoder(input_size = self.in_dim, reverse = True)
+        self.decoder = self.build_decoder(encoder_output_size = self.in_dim, decoder_type = 'crf')
         self.decoder_type = 'crf'
 
