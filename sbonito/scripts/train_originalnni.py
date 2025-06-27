@@ -95,7 +95,7 @@ if __name__ == '__main__':
     #optimized_params = nni.get_next_parameter()
     #params.update(optimized_params)
     #print(params)
-    validate_every = 100
+    validate_every = 80
     checkpoint_every = 20000
 
     data_dir = args.data_dir
@@ -116,7 +116,9 @@ if __name__ == '__main__':
     elif args.model == 'bonitosnn':
         from bonitosnn.model.snn_model import BonitoSNNModel as Model 
     elif args.model == 'bonitospikeconv':
-        from bonitosnn.model.snn_model import BonitoSpikeConv as Model 
+        from bonitosnn.model.snn_model import BonitoSpikeConv as Model
+    elif args.model == 's5':
+        from bonito.model import S5Model as Model
    
     prev_metric_value = None
     stale_count = 0
@@ -165,15 +167,13 @@ if __name__ == '__main__':
         dataloader_validation = dataloader_validation, 
         scaler = scaler,
         use_amp = use_amp,
-        nlstm=args.nlstm,
-        conv_threshold=next_params["conv_th"] if "conv_th" in next_params else 0,
-        slstm_threshold=next_params["slstm_threshold"]
+        nlstm=args.nlstm
     )
     model = model.to(device)
 
     print('Creating optimization')
     ##    OPTIMIZATION     #############################################
-    optimizer = torch.optim.Adam(model.parameters(), lr=next_params['starting-lr'])
+    optimizer = torch.optim.AdamW(model.parameters(), lr=next_params['starting-lr'])
     total_steps =  (len(dataset.train_idxs)*args.num_epochs)/next_params['batch-size']
     cosine_lr = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer,total_steps, eta_min=0.00001, last_epoch=-1, verbose=False)
     lr_scheduler = GradualWarmupScheduler(optimizer, multiplier = 1.0, total_epoch = args.warmup_steps, after_scheduler=cosine_lr)

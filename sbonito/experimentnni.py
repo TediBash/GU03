@@ -17,6 +17,7 @@ if __name__=="__main__":
     default="/root/Acinetobacter_baumannii_AYP-A2/train_numpy_min")
     parser.add_argument("--output-dir", type=str, help='Path where the model is saved',default="./test_nni")
     parser.add_argument("--model", type=str, choices=[
+        's5',
         'bonito',
         'bonitosnn',
         'bonitospikeconv',
@@ -41,6 +42,14 @@ if __name__=="__main__":
 
     elif args.model=="bonitospikeconv":
         #spikeconv search space
+        search_space = {
+        'batch-size': {'_type': 'randint', '_value': [16, 128]},
+        'starting-lr': {'_type': 'loguniform', '_value': [0.0001, 0.01]},
+        'slstm_threshold':{'_type': 'uniform', '_value': [0.01, 0.2]},
+        'conv_th':{'_type': 'uniform', '_value': [0.01, 0.2]},
+        }
+    
+    elif args.model=='s5':
         search_space = {
         'batch-size': {'_type': 'randint', '_value': [16, 128]},
         'starting-lr': {'_type': 'loguniform', '_value': [0.0001, 0.01]},

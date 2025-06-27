@@ -94,14 +94,14 @@ if __name__ == '__main__':
     parser.add_argument("--use-scaler", action='store_true', help='use 16bit float precision')
     parser.add_argument("--overwrite", action='store_true', help='delete existing files in folder')
     parser.add_argument("--checkpoint", type=str, help='checkpoint file to resume training')
-    parser.add_argument("--nlstm",type=int,default=0,choices=[0,1,2,3,4],help='number of lstm blocks must be between 0 and 4')
+    parser.add_argument("--nlstm",type=int,default=0,choices=[0,1,2,3,4,5,6],help='number of lstm blocks must be between 0 and 4')
     parser.add_argument("--conv-th",type=float,default=0.05,help='Neuron threshold for spikeconv and spikelin')
     parser.add_argument("--slstm-th",type=float,default=0.05,help='slstm threshold')
     parser.add_argument("--nl2mu", type=int, default=0,help = "number of l2mu istances")
     parser.add_argument("--one-conv", type= bool, default= False,help = "set to true for a 1 convolution model")
     args = parser.parse_args()
     
-    validate_every = 10
+    validate_every = 80
     checkpoint_every = 20000
 
     data_dir = args.data_dir
@@ -169,7 +169,8 @@ if __name__ == '__main__':
               dataloader_train = dataloader_train, 
               dataloader_validation = dataloader_validation,
               scaler = scaler,
-              use_amp = use_amp
+              use_amp = use_amp,
+              nlstm=args.nlstm,
           )
     
     '''model = Model(
