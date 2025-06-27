@@ -138,7 +138,7 @@ class S5Model(BaseModelImpl):
         self.reverse = reverse
         self.nblock = nlstm
         self.cnn_version = cnn_version
-        self.in_dim = 400
+        self.in_dim = 384
         
         if load_default:
             self.load_default_configuration()
