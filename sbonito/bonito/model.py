@@ -156,7 +156,7 @@ class S5Model(BaseModelImpl):
         x = self.decoder(x)
         return x
 
-    def init_cnn(m):
+    def init_cnn(self, m):
         # He initialization, better for SiLU/ReLU
         if isinstance(m, nn.Conv1d):
             nn.init.kaiming_normal_(m.weight)
