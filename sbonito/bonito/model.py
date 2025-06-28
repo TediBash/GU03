@@ -122,7 +122,7 @@ class S5Model(BaseModelImpl):
     """S5 Model
     """
     def __init__(self, convolution = None, encoder = None, decoder = None, reverse = True, load_default = False,
-                 nlstm=0, cnn_version=0, *args, **kwargs):
+                 nlstm=0, cnn_version=0, state_dim = 96, apply_init_cnn = False, *args, **kwargs):
         super(S5Model, self).__init__(*args, **kwargs)
         """
         Args:
@@ -139,6 +139,8 @@ class S5Model(BaseModelImpl):
         self.nblock = nlstm
         self.cnn_version = cnn_version
         self.in_dim = 384
+        self.state_dim = state_dim
+        self.apply_initi_cnn = apply_init_cnn
         
         if load_default:
             self.load_default_configuration()
@@ -175,7 +177,8 @@ class S5Model(BaseModelImpl):
         else:
             cnn = self.build_cnn_version_2()
             self.in_dim = 128
-        cnn.apply(self.init_cnn)
+        if self.apply_initi_cnn:
+            cnn.apply(self.init_cnn)
         return cnn
     
     def build_cnn_version_0(self):
@@ -399,7 +402,7 @@ class S5Model(BaseModelImpl):
         
         encoder = S5Block(
             dim=input_size,
-            state_dim=96,   # even with 246 dim no big changes
+            state_dim=self.state_dim,   # even with 246 dim no big changes
             bidir=reverse,
             block_count=self.nblock,
             ff_dropout=0.05,
@@ -423,7 +426,7 @@ class S5Model(BaseModelImpl):
 
         self.convolution = self.build_cnn()
         self.cnn_stride = self.get_defaults()['cnn_stride']
-        self.encoder = self.build_encoder(input_size = self.in_dim, reverse = True)
+        self.encoder = self.build_encoder(input_size = self.in_dim, reverse = self.reverse)
         self.decoder = self.build_decoder(encoder_output_size = self.in_dim, decoder_type = 'crf')
         self.decoder_type = 'crf'
 

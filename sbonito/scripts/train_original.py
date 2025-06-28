@@ -100,6 +100,7 @@ if __name__ == '__main__':
     parser.add_argument("--nl2mu", type=int, default=0,help = "number of l2mu istances")
     parser.add_argument("--one-conv", type= bool, default= False,help = "set to true for a 1 convolution model")
     parser.add_argument("--conv",type=int,default=0,choices=[0,1,2],help='there are 3 types of cnn choose 0,1 or 2')
+    parser.add_argument("--initcnn",type=bool,default=False,help='Initialize cnn with He')
 
     args = parser.parse_args()
     
@@ -167,16 +168,27 @@ if __name__ == '__main__':
         scaler = None
 
     print('Creating model')
-    model = Model(
-              load_default = True,
-              device = device,
-              dataloader_train = dataloader_train, 
-              dataloader_validation = dataloader_validation,
-              scaler = scaler,
-              use_amp = use_amp,
-              nlstm=args.nlstm,
-              cnn_version=args.conv,
-          )
+    if args.model == 's5':
+        model = Model(
+                load_default = True,
+                device = device,
+                dataloader_train = dataloader_train, 
+                dataloader_validation = dataloader_validation,
+                scaler = scaler,
+                use_amp = use_amp,
+                nlstm=args.nlstm,
+                cnn_version=args.conv,
+                apply_init_cnn=args.initcnn,
+            )
+    else:
+        model = Model(
+          load_default = True,
+          device = device,
+          dataloader_train = dataloader_train, 
+          dataloader_validation = dataloader_validation, 
+          scaler = scaler,
+          use_amp = use_amp,
+      )
     
     '''model = Model(
           load_default = True,
