@@ -69,9 +69,9 @@ class BaseModel(nn.Module):
         """
         
         self.train()
-        x = batch['x'].to(self.device)
+        x = batch['x'].to(self.device, non_blocking=True)
         x = x.unsqueeze(1) # add channels dimension
-        y = batch['y'].to(self.device)
+        y = batch['y'].to(self.device, non_blocking=True)
         
         with torch.cuda.amp.autocast(enabled=self.use_amp):
             p = self.forward(x) # forward through the network
@@ -708,9 +708,9 @@ class BaseModelS2S(BaseModel):
         """
         
         self.train()
-        x = batch['x'].to(self.device)
+        x = batch['x'].to(self.device, non_blocking=True)
         x = x.unsqueeze(1) # add channels dimension
-        y = batch['y'].to(self.device)
+        y = batch['y'].to(self.device, non_blocking=True)
         y = y.to(int)
 
         # during training shorten max_len based on training to speed up training
@@ -731,9 +731,9 @@ class BaseModelS2S(BaseModel):
         
         self.eval()
         with torch.no_grad():
-            x = batch['x'].to(self.device)
+            x = batch['x'].to(self.device, non_blocking=True)
             x = x.unsqueeze(1) # add channels dimension
-            y = batch['y'].to(self.device)
+            y = batch['y'].to(self.device, non_blocking=True)
             y = y.to(int)
             p = self.forward(x, None, forced_teaching = 0.0, max_len = self.max_len) # forward through the network
             
@@ -748,7 +748,7 @@ class BaseModelS2S(BaseModel):
         """
         self.eval()
         with torch.no_grad():
-            x = batch['x'].to(self.device)
+            x = batch['x'].to(self.device, non_blocking=True)
             x = x.unsqueeze(1)
             p = self.forward(x, None, forced_teaching = 0.0, max_len = self.max_len)
             

@@ -147,13 +147,15 @@ if __name__ == '__main__':
         dataset, 
         batch_size = args.batch_size, 
         sampler = dataset.train_sampler, 
-        num_workers = 4
+        num_workers = 4,
+        pin_memory=True
     )
     dataloader_validation = DataLoader(
         dataset, 
         batch_size = args.batch_size, 
         sampler = dataset.validation_sampler, 
-        num_workers = 4
+        num_workers = 4,
+        pin_memory=True
     )
 
     
@@ -187,7 +189,7 @@ if __name__ == '__main__':
           slstm_threshold=args.slstm_th,
           conv_threshold=args.conv_th
       )'''
-    model = model.to(device)
+    model = model.to(device, non_blocking = True)
   
     print_architecture(model)
 
@@ -210,7 +212,7 @@ if __name__ == '__main__':
 
     if args.checkpoint is not None:
         model.load(args.checkpoint, initialize_lazy = True)
-        model.to(device)
+        model.to(device, non_blocking = True)
 
     print('Creating outputs')
     # output stuff

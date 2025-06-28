@@ -156,6 +156,15 @@ class S5Model(BaseModelImpl):
         x = self.decoder(x)
         return x
 
+    def init_cnn(m):
+        # He initialization, better for SiLU/ReLU
+        if isinstance(m, nn.Conv1d):
+            nn.init.kaiming_normal_(m.weight)
+            if m.bias is not None:
+                nn.init.zeros_(m.bias)
+
+
+
     def build_cnn(self):
         version = self.cnn_version
         if version == 0:
@@ -166,6 +175,7 @@ class S5Model(BaseModelImpl):
         else:
             cnn = self.build_cnn_version_2()
             self.in_dim = 128
+        cnn.apply(self.init_cnn)
         return cnn
     
     def build_cnn_version_0(self):
