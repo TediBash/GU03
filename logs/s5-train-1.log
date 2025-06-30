@@ -1,0 +1,528 @@
+INFO: localdir at /scratch/1201607.mla_group_20
+INFO: your job will run on local system.
+/home/mla_group_20/miniconda3/envs/gu3/lib/python3.10/site-packages/torch/utils/data/dataloader.py:560: UserWarning: This DataLoader will create 4 worker processes in total. Our suggested max number of worker in current system is 1, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+  warnings.warn(_create_warning_msg(
+Creating dataset
+Creating model
+Model Architecture:
+
+Convolution Layers:
+  Conv1d(1, 16, kernel_size=(5,), stride=(1,), padding=(2,))
+  SiLU()
+  Conv1d(16, 64, kernel_size=(5,), stride=(1,), padding=(2,))
+  SiLU()
+  Conv1d(64, 384, kernel_size=(19,), stride=(5,), padding=(9,))
+  SiLU()
+Encoder Layers:
+  S5Block(
+  (s5): S5(
+    (seq): S5SSM()
+  )
+  (attn_norm): LayerNorm((384,), eps=1e-05, elementwise_affine=True)
+  (attn_dropout): Dropout(p=0.0, inplace=False)
+  (geglu): GEGLU()
+  (ff_enc): Linear(in_features=384, out_features=768, bias=False)
+  (ff_dec): Linear(in_features=384, out_features=384, bias=False)
+  (ff_norm): LayerNorm((384,), eps=1e-05, elementwise_affine=True)
+  (ff_dropout): Dropout(p=0.05, inplace=False)
+)
+Decoder Layers:
+  BonitoLinearCRFDecoder(
+  (linear): Linear(in_features=384, out_features=1024, bias=True)
+  (activation): Tanh()
+)
+
+--- Model Summary ---
+Total Parameters: 1458784
+Trainable Parameters: 1458784
+
+Additional Information:
+Device: cuda:0
+Input/Output shapes for each layer may vary based on input data.
+Total Number of Layers: 3
+
+--- End of Architecture ---
+Creating optimization
+Creating outputs
+Training
+epoch 0
+/home/mla_group_20/miniconda3/envs/gu3/lib/python3.10/site-packages/torch/utils/data/dataloader.py:560: UserWarning: This DataLoader will create 4 worker processes in total. Our suggested max number of worker in current system is 1, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+  warnings.warn(_create_warning_msg(
+  epoch step  time  ...  metric.accuracy.val        lr  checkpoint
+0     0   80    10  ...             0.471164  0.000016          no
+
+[1 rows x 11 columns]
+  epoch step  time  ...  metric.accuracy.val        lr  checkpoint
+0     0  160     6  ...             0.408273  0.000032          no
+
+[1 rows x 11 columns]
+  epoch step  time  ...  metric.accuracy.val        lr  checkpoint
+0     0  240     6  ...             0.451247  0.000048          no
+
+[1 rows x 11 columns]
+  epoch step  time  ...  metric.accuracy.val        lr  checkpoint
+0     0  320     6  ...             0.467483  0.000064          no
+
+[1 rows x 11 columns]
+  epoch step  time  ...  metric.accuracy.val       lr  checkpoint
+0     0  400     6  ...             0.537746  0.00008          no
+
+[1 rows x 11 columns]
+  epoch step  time  ...  metric.accuracy.val        lr  checkpoint
+0     0  480     6  ...             0.589935  0.000096          no
+
+[1 rows x 11 columns]
+  epoch step  time  ...  metric.accuracy.val        lr  checkpoint
+0     0  560     6  ...             0.620564  0.000112          no
+
+[1 rows x 11 columns]
+  epoch step  time  ...  metric.accuracy.val        lr  checkpoint
+0     0  640     6  ...             0.672091  0.000128          no
+
+[1 rows x 11 columns]
+  epoch step  time  ...  metric.accuracy.val        lr  checkpoint
+0     0  720     6  ...             0.684865  0.000144          no
+
+[1 rows x 11 columns]
+  epoch step  time  ...  metric.accuracy.val       lr  checkpoint
+0     0  800     6  ...             0.708531  0.00016          no
+
+[1 rows x 11 columns]
+  epoch step  time  ...  metric.accuracy.val        lr  checkpoint
+0     0  880     6  ...             0.729562  0.000176          no
+
+[1 rows x 11 columns]
+  epoch step  time  ...  metric.accuracy.val        lr  checkpoint
+0     0  960     6  ...             0.729028  0.000192          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     0  1040     6  ...             0.730624  0.000208          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     0  1120     6  ...             0.757667  0.000224          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val       lr  checkpoint
+0     0  1200     6  ...             0.752473  0.00024          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     0  1280     6  ...             0.762242  0.000256          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     0  1360     6  ...              0.77114  0.000272          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     0  1440     6  ...             0.768295  0.000288          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     0  1520     6  ...              0.80927  0.000304          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val       lr  checkpoint
+0     0  1600     6  ...             0.801859  0.00032          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     0  1680     6  ...             0.787815  0.000336          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     0  1760     6  ...             0.815361  0.000352          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     0  1840     6  ...             0.813297  0.000368          no
+
+[1 rows x 11 columns]
+epoch 1
+/home/mla_group_20/miniconda3/envs/gu3/lib/python3.10/site-packages/torch/utils/data/dataloader.py:560: UserWarning: This DataLoader will create 4 worker processes in total. Our suggested max number of worker in current system is 1, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+  warnings.warn(_create_warning_msg(
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     1  1920     5  ...             0.791263  0.000384          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val      lr  checkpoint
+0     1  2000     6  ...             0.804448  0.0004          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     1  2080     6  ...             0.783501  0.000416          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     1  2160     6  ...             0.802406  0.000432          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     1  2240     6  ...             0.803441  0.000448          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     1  2320     6  ...             0.805705  0.000464          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val       lr  checkpoint
+0     1  2400     6  ...             0.807293  0.00048          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     1  2480     6  ...               0.7863  0.000496          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     1  2560     6  ...             0.807045  0.000512          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     1  2640     6  ...             0.797233  0.000528          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     1  2720     6  ...             0.803244  0.000544          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val       lr  checkpoint
+0     1  2800     6  ...             0.809455  0.00056          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     1  2880     6  ...             0.782549  0.000576          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     1  2960     6  ...             0.818186  0.000592          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     1  3040     6  ...             0.791109  0.000608          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     1  3120     6  ...             0.832275  0.000624          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val       lr  checkpoint
+0     1  3200     6  ...             0.801466  0.00064          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     1  3280     6  ...             0.814827  0.000656          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     1  3360     6  ...             0.832902  0.000672          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     1  3440     6  ...             0.816908  0.000688          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     1  3520     6  ...             0.824977  0.000704          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val       lr  checkpoint
+0     1  3600     6  ...             0.823749  0.00072          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     1  3680     6  ...             0.835175  0.000736          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     1  3760     6  ...             0.824056  0.000752          no
+
+[1 rows x 11 columns]
+epoch 2
+/home/mla_group_20/miniconda3/envs/gu3/lib/python3.10/site-packages/torch/utils/data/dataloader.py:560: UserWarning: This DataLoader will create 4 worker processes in total. Our suggested max number of worker in current system is 1, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+  warnings.warn(_create_warning_msg(
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     2  3840     7  ...             0.822124  0.000768          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     2  3920     6  ...             0.806862  0.000784          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val      lr  checkpoint
+0     2  4000     6  ...             0.808315  0.0008          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     2  4080     6  ...             0.814688  0.000816          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     2  4160     6  ...             0.829677  0.000832          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     2  4240     6  ...             0.818328  0.000848          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     2  4320     6  ...             0.806553  0.000864          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val       lr  checkpoint
+0     2  4400     6  ...             0.827846  0.00088          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     2  4480     6  ...             0.823657  0.000896          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     2  4560     6  ...             0.810251  0.000912          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     2  4640     6  ...             0.820798  0.000928          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     2  4720     6  ...             0.817832  0.000944          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val       lr  checkpoint
+0     2  4800     6  ...             0.816508  0.00096          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     2  4880     6  ...              0.81153  0.000976          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     2  4960     6  ...              0.80723  0.000992          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val     lr  checkpoint
+0     2  5040     6  ...             0.822883  0.001          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val     lr  checkpoint
+0     2  5120     6  ...             0.817216  0.001          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     2  5200     6  ...             0.808343  0.000999          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     2  5280     6  ...              0.84338  0.000998          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     2  5360     6  ...             0.831143  0.000996          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     2  5440     6  ...             0.829272  0.000995          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     2  5520     6  ...             0.852269  0.000993          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val       lr  checkpoint
+0     2  5600     6  ...             0.841844  0.00099          no
+
+[1 rows x 11 columns]
+epoch 3
+/home/mla_group_20/miniconda3/envs/gu3/lib/python3.10/site-packages/torch/utils/data/dataloader.py:560: UserWarning: This DataLoader will create 4 worker processes in total. Our suggested max number of worker in current system is 1, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+  warnings.warn(_create_warning_msg(
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     3  5680     5  ...             0.838241  0.000987          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     3  5760     6  ...             0.830757  0.000984          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     3  5840     6  ...             0.829435  0.000981          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     3  5920     6  ...             0.830212  0.000977          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     3  6000     6  ...              0.83383  0.000973          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     3  6080     6  ...             0.835253  0.000968          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     3  6160     6  ...             0.836748  0.000963          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     3  6240     6  ...             0.832962  0.000958          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     3  6320     6  ...              0.83428  0.000953          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     3  6400     6  ...             0.826467  0.000947          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     3  6480     6  ...             0.829296  0.000941          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     3  6560     6  ...             0.821517  0.000934          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     3  6640     6  ...             0.803633  0.000928          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     3  6720     6  ...             0.840079  0.000921          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     3  6800     6  ...             0.816091  0.000913          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     3  6880     6  ...             0.849128  0.000906          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     3  6960     6  ...              0.82257  0.000898          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val       lr  checkpoint
+0     3  7040     6  ...              0.84287  0.00089          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     3  7120     6  ...             0.855319  0.000881          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     3  7200     6  ...             0.835446  0.000872          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     3  7280     6  ...             0.846249  0.000863          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     3  7360     6  ...             0.851907  0.000854          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     3  7440     6  ...             0.848315  0.000845          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     3  7520     6  ...             0.860136  0.000835          no
+
+[1 rows x 11 columns]
+epoch 4
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     4  7600     8  ...             0.845535  0.000825          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     4  7680     6  ...             0.834162  0.000815          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     4  7760     6  ...             0.826877  0.000804          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     4  7840     6  ...             0.826009  0.000794          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     4  7920     6  ...             0.833296  0.000783          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     4  8000     6  ...             0.840168  0.000772          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val       lr  checkpoint
+0     4  8080     6  ...             0.819194  0.00076          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     4  8160     6  ...             0.853507  0.000749          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     4  8240     6  ...              0.83137  0.000737          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     4  8320     6  ...             0.817391  0.000726          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     4  8400     6  ...             0.846145  0.000714          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     4  8480     6  ...             0.830284  0.000702          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     4  8560     6  ...             0.839181  0.000689          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     4  8640     6  ...             0.853231  0.000677          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     4  8720     6  ...             0.813958  0.000665          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     4  8800     6  ...             0.840636  0.000652          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     4  8880     6  ...             0.826537  0.000639          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     4  8960     6  ...             0.832524  0.000626          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     4  9040     6  ...             0.857871  0.000614          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     4  9120     6  ...             0.846512  0.000601          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     4  9200     6  ...              0.85046  0.000588          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     4  9280     6  ...             0.862542  0.000575          no
+
+[1 rows x 11 columns]
+  epoch  step  time  ...  metric.accuracy.val        lr  checkpoint
+0     4  9360     6  ...             0.864405  0.000561          no
+
+[1 rows x 11 columns]
