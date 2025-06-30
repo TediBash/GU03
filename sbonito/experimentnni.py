@@ -51,10 +51,12 @@ if __name__=="__main__":
     
     elif args.model=='s5':
         search_space = {
-        'batch-size': {'_type': 'randint', '_value': [16, 128]},
-        'starting-lr': {'_type': 'loguniform', '_value': [0.0001, 0.01]},
-        'slstm_threshold':{'_type': 'uniform', '_value': [0.01, 0.2]},
-        'conv_th':{'_type': 'uniform', '_value': [0.01, 0.2]},
+            "state_dim": {"_type": "choice", "_value": [16, 32, 64, 96, 128, 192, 256, 384, 512, 768, 1024]},
+            "nblocks": {"_type": "choice", "_value": [2, 4, 6]},
+            "conv": {"_type": "choice", "_value": [0, 2]},
+            "initcnn": {"_type": "choice", "_value": [True, False]},
+            "starting-lr": {"_type": "choice", "_value": [1e-5, 5e-5, 1e-4, 5e-4, 1e-3, 5e-3, 1e-2]},
+            "warmup-steps": {"_type": "randint", "_value": [500, 1000]}
         }
 
     print("working dir: ",os.getcwd())
@@ -66,14 +68,14 @@ if __name__=="__main__":
     experiment.config.tuner.class_args['optimize_mode'] = 'maximize'
 
     experiment.config.trial_command = 'python '+args.train_file+" --data-dir "+args.data_dir+" --output-dir "+args.output_dir+\
-        " --model "+args.model +" --num-epochs "+str(args.num_epochs) +" --nlstm "+str(args.nlstm)
+        " --model "+args.model +" --num-epochs "+str(args.num_epochs)
     experiment.config.trial_code_directory = args.code_dir #'./sbonito'
     #experiment.config.trial_gpu_number=1
     #experiment.config.use_active_gpu=True
 
     experiment.config.experiment_working_directory=args.nni_dir #'./sbonito/nni-experiments'
 
-    experiment.config.max_trial_number = 10
+    experiment.config.max_trial_number = 15
     experiment.config.trial_concurrency = 1
 
     #experiment.config.max_experiment_duration = '5m'

@@ -75,13 +75,16 @@ if __name__ == '__main__':
     ], help='Model',default="bonitosnn")
     parser.add_argument("--window-size", type=int, choices=[400, 1000, 2000, 4000], help='Window size for the data',default=2000)
     parser.add_argument("--num-epochs", type=int, default = 1)
-    #parser.add_argument("--batch-size", type=int, default = 64)
+    parser.add_argument("--batch-size", type=int, default = 64)
     #parser.add_argument("--starting-lr", type=float, default = 0.001)
-    parser.add_argument("--warmup-steps", type=int, default = 5000)
+    #parser.add_argument("--warmup-steps", type=int, default = 800)
     parser.add_argument("--use-scaler", action='store_true', help='use 16bit float precision')
     parser.add_argument("--overwrite", action='store_true', help='delete existing files in folder')
     parser.add_argument("--checkpoint", type=str, help='checkpoint file to resume training')
-    parser.add_argument("--nlstm",type=int,choices=[0,1,2,3,4],help='number of lstm blocks must be between 0 and 4',default=0)
+    #parser.add_argument("--nlstm",type=int,choices=[0,1,2,3,4,5,6],help='number of lstm blocks must be between 0 and 4',default=0)
+    #parser.add_argument("--conv",type=int,default=0,choices=[0,2],help='there are 3 types of cnn choose 0,1 or 2')
+    #parser.add_argument("--initcnn",type=bool,default=False,help='Initialize cnn with He')
+    #parser.add_argument("--state_dim", type=int, default = 96)
     args = parser.parse_args()
 
     print("working dir: ",os.getcwd())
@@ -95,8 +98,8 @@ if __name__ == '__main__':
     #optimized_params = nni.get_next_parameter()
     #params.update(optimized_params)
     #print(params)
-    validate_every = 80
-    checkpoint_every = 20000
+    validate_every = 100
+    checkpoint_every = 4000
 
     data_dir = args.data_dir
 
@@ -127,6 +130,13 @@ if __name__ == '__main__':
     #while True:
     next_params = nni.get_next_parameter()
     print("current parameters: ",next_params)
+    state_dim = next_params['state_dim']
+    nblocks = next_params['nblocks']
+
+    if state_dim % nblocks != 0:
+        nni.report_final_result(0)  # Report failure
+        exit()
+    
     print('Creating dataset')
     dataset = BaseNanoporeDataset(
         data_dir = data_dir, 
@@ -140,13 +150,13 @@ if __name__ == '__main__':
 
     dataloader_train = DataLoader(
         dataset, 
-        batch_size = next_params['batch-size'], 
+        batch_size = args.batch_size, 
         sampler = dataset.train_sampler, 
         num_workers = 1
     )
     dataloader_validation = DataLoader(
         dataset, 
-        batch_size = next_params['batch-size'], 
+        batch_size = args.batch_size,
         sampler = dataset.validation_sampler, 
         num_workers = 1
     )
@@ -160,23 +170,37 @@ if __name__ == '__main__':
         scaler = None
 
     print('Creating model')
-    model = Model(
-        load_default = True,
-        device = device,
-        dataloader_train = dataloader_train, 
-        dataloader_validation = dataloader_validation, 
-        scaler = scaler,
-        use_amp = use_amp,
-        nlstm=args.nlstm
-    )
+    if args.model != 's5':
+        model = Model(
+            load_default = True,
+            device = device,
+            dataloader_train = dataloader_train, 
+            dataloader_validation = dataloader_validation, 
+            scaler = scaler,
+            use_amp = use_amp,
+            nlstm=args.nlstm,
+        )
+    else:
+        model = Model(
+                load_default = True,
+                device = device,
+                dataloader_train = dataloader_train, 
+                dataloader_validation = dataloader_validation,
+                scaler = scaler,
+                use_amp = use_amp,
+                nlstm=nblocks,
+                cnn_version=next_params["conv"],
+                apply_init_cnn=next_params["initcnn"],
+                state_dim = state_dim,
+            )
     model = model.to(device)
 
     print('Creating optimization')
     ##    OPTIMIZATION     #############################################
     optimizer = torch.optim.AdamW(model.parameters(), lr=next_params['starting-lr'])
-    total_steps =  (len(dataset.train_idxs)*args.num_epochs)/next_params['batch-size']
+    total_steps =  (len(dataset.train_idxs)*args.num_epochs)/args.batch_size
     cosine_lr = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer,total_steps, eta_min=0.00001, last_epoch=-1, verbose=False)
-    lr_scheduler = GradualWarmupScheduler(optimizer, multiplier = 1.0, total_epoch = args.warmup_steps, after_scheduler=cosine_lr)
+    lr_scheduler = GradualWarmupScheduler(optimizer, multiplier = 1.0, total_epoch = next_params["warmup-steps"], after_scheduler=cosine_lr)
     schedulers = {'lr_scheduler': lr_scheduler}
     clipping_value = 2
     use_sam = False
