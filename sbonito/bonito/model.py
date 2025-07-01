@@ -251,7 +251,7 @@ class BonitoModel(BaseModelImpl):
         self.convolution = self.build_cnn()
         self.cnn_stride = self.get_defaults()['cnn_stride']
         self.encoder = self.build_encoder(input_size = self.in_dim, reverse = True)
-        self.decoder = self.build_decoder(encoder_output_size = self.in_dim, decoder_type = 'crf')
+        self.decoder = self.build_decoder(encoder_output_size = 384, decoder_type = 'crf')
         self.decoder_type = 'crf'
 
 class S5Model(BaseModelImpl):

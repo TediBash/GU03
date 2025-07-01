@@ -101,6 +101,7 @@ if __name__ == '__main__':
     #parser.add_argument("--one-conv", type= bool, default= False,help = "set to true for a 1 convolution model")
     parser.add_argument("--conv",type=int,default=0,choices=[0,1,2],help='there are 3 types of cnn choose 0,1 or 2')
     parser.add_argument("--initcnn",type=int,default=0,choices=[0,1],help='Initialize cnn with He')
+    parser.add_argument("--dim-space",type=int,default=96,help='Define state space dimension of S5')
 
     args = parser.parse_args()
     
@@ -179,6 +180,7 @@ if __name__ == '__main__':
                 nlstm=args.nlstm,
                 cnn_version=args.conv,
                 apply_init_cnn=args.initcnn,
+                state_dim = args.dim_space,
             )
     else:
         model = Model(
