@@ -98,9 +98,9 @@ if __name__ == '__main__':
     parser.add_argument("--conv-th",type=float,default=0.05,help='Neuron threshold for spikeconv and spikelin')
     parser.add_argument("--slstm-th",type=float,default=0.05,help='slstm threshold')
     parser.add_argument("--nl2mu", type=int, default=0,help = "number of l2mu istances")
-    parser.add_argument("--one-conv", type= bool, default= False,help = "set to true for a 1 convolution model")
+    #parser.add_argument("--one-conv", type= bool, default= False,help = "set to true for a 1 convolution model")
     parser.add_argument("--conv",type=int,default=0,choices=[0,1,2],help='there are 3 types of cnn choose 0,1 or 2')
-    parser.add_argument("--initcnn",type=bool,default=False,help='Initialize cnn with He')
+    parser.add_argument("--initcnn",type=int,default=0,choices=[0,1],help='Initialize cnn with He')
 
     args = parser.parse_args()
     
