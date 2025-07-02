@@ -40,6 +40,46 @@ params_l2mu_leaky = {
   }
 
 
+class EarlyStopping:
+   def __init__(self, patience=7, min_delta=0, restore_best_weights=True, 
+                loss_weight=0.7, acc_weight=0.3):
+       self.patience = patience
+       self.min_delta = min_delta
+       self.restore_best_weights = restore_best_weights
+       self.loss_weight = loss_weight
+       self.acc_weight = acc_weight
+       self.best_score = None
+       self.counter = 0
+       self.best_weights = None
+
+   def __call__(self, val_loss, val_accuracy, model):
+       # Combine loss and accuracy into single score
+       # Normalize loss (lower is better) and accuracy (higher is better)
+       normalized_loss = val_loss  # Assume loss is already normalized
+       normalized_acc = val_accuracy  # Assume accuracy is 0-1 or 0-100
+       
+       # Combined score (lower is better)
+       combined_score = (self.loss_weight * normalized_loss - 
+                        self.acc_weight * normalized_acc)
+       
+       if self.best_score is None:
+           self.best_score = combined_score
+           self.save_checkpoint(model)
+       elif combined_score < self.best_score - self.min_delta:
+           self.best_score = combined_score
+           self.counter = 0
+           self.save_checkpoint(model)
+       else:
+           self.counter += 1
+
+       if self.counter >= self.patience:
+           if self.restore_best_weights:
+               model.load_state_dict(self.best_weights)
+           return True
+       return False
+
+   def save_checkpoint(self, model):
+       self.best_weights = model.state_dict().copy()
 
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -102,7 +142,7 @@ if __name__ == '__main__':
     parser.add_argument("--conv",type=int,default=0,choices=[0,1,2],help='there are 3 types of cnn choose 0,1 or 2')
     parser.add_argument("--initcnn",type=int,default=0,choices=[0,1],help='Initialize cnn with He')
     parser.add_argument("--dim-space",type=int,default=96,help='Define state space dimension of S5')
-
+    parser.add_argument("--stopping",type=int,default=8,help='Number of epochs without improvement')
     args = parser.parse_args()
     
     validate_every = 80
@@ -252,8 +292,16 @@ if __name__ == '__main__':
     # keep track of losses and metrics to take the average
     train_results = dict()
     
+    # loss_weight + acc_weight = 1
+    early_stopping = EarlyStopping(
+                                patience=args.stopping, 
+                                loss_weight=0.6,  # 60% weight on loss
+                                acc_weight=0.4    # 40% weight on accuracy
+                                )
+    
     print('Training')
     total_num_steps = 1
+    check_loss = 1e6
     for epoch_num in range(args.num_epochs):
         print(f"epoch {epoch_num}")
         loader_train = model.dataloader_train
@@ -301,8 +349,11 @@ if __name__ == '__main__':
                 
                 for k, v in losses.items():
                     log_df[k + '.val'] = v # do not need the mean as we only did it once
+                    check_loss = v # last 
                 for k, v in metrics.items():
-                    log_df[k + '.val'] = np.mean(v)
+                    acc_mean = np.mean(v)
+                    log_df[k + '.val'] = acc_mean
+                    check_accuracy = acc_mean
                     
                 # calculate time it took since last validation step
                 log_df['epoch'] = str(epoch_num)
@@ -329,6 +380,11 @@ if __name__ == '__main__':
                     
                 # write results to console
                 print(log_df)
+                
+            if early_stopping(check_loss, check_accuracy, model):
+                print(f"Early stopping at epoch {epoch_num}")
+                model.save(os.path.join(checkpoints_dir, 'checkpoint_' + str(total_num_steps) + '.pt'))
+                break
                 
     
     model.save(os.path.join(checkpoints_dir, 'checkpoint_' + str(total_num_steps) + '.pt'))

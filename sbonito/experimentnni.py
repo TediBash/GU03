@@ -50,8 +50,9 @@ if __name__=="__main__":
         }
     
     elif args.model=='s5':
+        #, 192, 256, 384, 512, 768, 1024
         search_space = {
-            "state_dim": {"_type": "choice", "_value": [16, 32, 64, 96, 128, 192, 256, 384, 512, 768, 1024]},
+            "state_dim": {"_type": "choice", "_value": [16, 32, 64, 96, 128]},
             "nblocks": {"_type": "choice", "_value": [2, 4, 6]},
             "conv": {"_type": "choice", "_value": [0, 2]},
             "initcnn": {"_type": "choice", "_value": [True, False]},
@@ -64,8 +65,10 @@ if __name__=="__main__":
     experiment = Experiment('local')
 
     experiment.config.search_space = search_space
-    experiment.config.tuner.name = 'Anneal'
+    #experiment.config.tuner.name = 'Anneal'
+    experiment.config.tuner.name = 'TPE'
     experiment.config.tuner.class_args['optimize_mode'] = 'maximize'
+    experiment.config.tuner.class_args['seed'] = 42
 
     experiment.config.trial_command = 'python '+args.train_file+" --data-dir "+args.data_dir+" --output-dir "+args.output_dir+\
         " --model "+args.model +" --num-epochs "+str(args.num_epochs)

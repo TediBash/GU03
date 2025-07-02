@@ -310,9 +310,12 @@ class S5Model(BaseModelImpl):
         elif version == 1:
             cnn = self.build_cnn_version_1()
             self.in_dim = 512
-        else:
+        elif version == 2:
             cnn = self.build_cnn_version_2()
             self.in_dim = 128
+        elif version == 3:
+            cnn = self.build_cnn_version_3()
+            self.in_dim = 512
         if self.apply_initi_cnn:
             cnn.apply(self.init_cnn)
         return cnn
@@ -532,6 +535,30 @@ class S5Model(BaseModelImpl):
             # Final adaptive pooling to exact output length
             nn.AdaptiveAvgPool1d(400)   # [batch, 128, 400]
         )
+        return cnn
+    
+    def build_cnn_version_3(self):
+        cnn = nn.Sequential(
+            # Initial conv - no stride to preserve length
+            nn.Conv1d(1, 256, kernel_size=11, stride=1, padding=5),
+            nn.ReLU(),
+            
+            # Residual-style blocks with varying dilations
+            nn.Conv1d(256, 256, kernel_size=5, dilation=1, padding=2),
+            nn.ReLU(),
+            nn.Conv1d(256, 256, kernel_size=5, dilation=2, padding=4),
+            nn.ReLU(),
+            nn.Conv1d(256, 256, kernel_size=5, dilation=4, padding=8),
+            nn.ReLU(),
+            
+            # Controlled downsampling to reach exactly 400
+            nn.Conv1d(256, 384, kernel_size=3, stride=1, padding=1),
+            nn.ReLU(),
+            nn.AdaptiveAvgPool1d(400),  # Force output length to 400
+            
+            # Final feature extraction
+            nn.Conv1d(384, 512, kernel_size=1)
+            )
         return cnn
 
     def build_encoder(self, input_size, reverse):
