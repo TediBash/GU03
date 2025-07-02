@@ -143,6 +143,8 @@ if __name__ == '__main__':
     parser.add_argument("--initcnn",type=int,default=0,choices=[0,1],help='Initialize cnn with He')
     parser.add_argument("--dim-space",type=int,default=96,help='Define state space dimension of S5')
     parser.add_argument("--stopping",type=int,default=8,help='Number of epochs without improvement')
+    parser.add_argument("--decodertype",type=str,default='crf',help='Decoder type can be crf or ctc')
+
     args = parser.parse_args()
     
     validate_every = 80
@@ -221,6 +223,7 @@ if __name__ == '__main__':
                 cnn_version=args.conv,
                 apply_init_cnn=args.initcnn,
                 state_dim = args.dim_space,
+                decoder_type=args.decodertype,
             )
     else:
         model = Model(
