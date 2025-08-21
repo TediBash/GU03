@@ -144,6 +144,7 @@ if __name__ == '__main__':
     parser.add_argument("--dim-space",type=int,default=96,help='Define state space dimension of S5')
     parser.add_argument("--stopping",type=int,default=8,help='Number of epochs without improvement')
     parser.add_argument("--decodertype",type=str,default='crf',help='Decoder type can be crf or ctc')
+    parser.add_argument("--cnntype",type=int,default=0, choices=[0,1,2,3,4],help='there are 4 types of cnn choose 0,1,2 or 3')
 
     args = parser.parse_args()
     
@@ -220,10 +221,10 @@ if __name__ == '__main__':
                 scaler = scaler,
                 use_amp = use_amp,
                 nlstm=args.nlstm,
-                cnn_version=args.conv,
+                cnn_version=args.cnntype,
                 apply_init_cnn=args.initcnn,
                 state_dim = args.dim_space,
-                decoder_type=args.decodertype,
+                decoder_type='crf',
             )
     else:
         model = Model(
