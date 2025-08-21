@@ -134,7 +134,7 @@ if __name__ == '__main__':
     parser.add_argument("--use-scaler", action='store_true', help='use 16bit float precision')
     parser.add_argument("--overwrite", action='store_true', help='delete existing files in folder')
     parser.add_argument("--checkpoint", type=str, help='checkpoint file to resume training')
-    parser.add_argument("--nlstm",type=int,default=0,choices=[0,1,2,3,4,5,6],help='number of lstm blocks must be between 0 and 4')
+    parser.add_argument("--nlstm",type=int,default=0,choices=[0,1,2,3,4,5,6,7,8],help='number of lstm blocks must be between 0 and 4')
     parser.add_argument("--conv-th",type=float,default=0.05,help='Neuron threshold for spikeconv and spikelin')
     parser.add_argument("--slstm-th",type=float,default=0.05,help='slstm threshold')
     parser.add_argument("--nl2mu", type=int, default=0,help = "number of l2mu istances")
