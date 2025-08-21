@@ -305,6 +305,7 @@ if __name__ == '__main__':
     print('Training')
     total_num_steps = 1
     check_loss = 1e6
+    check_accuracy = 1
     for epoch_num in range(args.num_epochs):
         print(f"epoch {epoch_num}")
         loader_train = model.dataloader_train
