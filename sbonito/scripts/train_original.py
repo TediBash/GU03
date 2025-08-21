@@ -294,7 +294,7 @@ if __name__ == '__main__':
     
     # keep track of losses and metrics to take the average
     train_results = dict()
-    
+    early = False
     # loss_weight + acc_weight = 1
     early_stopping = EarlyStopping(
                                 patience=args.stopping, 
@@ -384,11 +384,12 @@ if __name__ == '__main__':
                     
                 # write results to console
                 print(log_df)
-                
-            if early_stopping(check_loss, check_accuracy, model):
-                print(f"Early stopping at epoch {epoch_num}")
-                model.save(os.path.join(checkpoints_dir, 'checkpoint_' + str(total_num_steps) + '.pt'))
-                break
+            
+            if early:    
+                if early_stopping(check_loss, check_accuracy, model):
+                    print(f"Early stopping at epoch {epoch_num}")
+                    model.save(os.path.join(checkpoints_dir, 'checkpoint_' + str(total_num_steps) + '.pt'))
+                    break
                 
     
     model.save(os.path.join(checkpoints_dir, 'checkpoint_' + str(total_num_steps) + '.pt'))
