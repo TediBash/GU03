@@ -234,7 +234,7 @@ if __name__ == '__main__':
           dataloader_validation = dataloader_validation, 
           scaler = scaler,
           use_amp = use_amp,
-          cnn_version=args.conv
+          cnn_version=args.cnntype
       )
     
     '''model = Model(
